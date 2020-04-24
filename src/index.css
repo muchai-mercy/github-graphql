@@ -43,6 +43,11 @@ input {
   filter: contrast(100%);
 }
 
+.holder {
+  display: flex;
+  justify-content: space-between;
+}
+
 button {
   width: 70px;
   height: 25px;

@@ -25,7 +25,12 @@ const App = () => {
     });
     // to fix
     setProfiles([profile.data?.user || null, ...allProfiles]);
-    };
+  };
+
+  const removeCard = (user) => {
+    allProfiles.splice(allProfiles.indexOf(user), 1)
+    return setProfiles([...allProfiles]);
+  };
 
   return (
     <div className="app">
@@ -46,7 +51,10 @@ const App = () => {
       <div className="container">
       {allProfiles && allProfiles.map((user, index) => (
         <div key={index} className="card">
-          <img src={user.avatarUrl} alt='' />
+          <div className="holder">
+            <img src={user.avatarUrl} alt='' />
+            <button onClick={() => removeCard(user)}>Remove</button>
+          </div>
           <p>{user.name}</p>
           {user.company ? <p>Company: {user.company}</p> : null}
           <p>{user.bio}</p>
