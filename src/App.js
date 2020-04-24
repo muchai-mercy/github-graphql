@@ -24,7 +24,7 @@ const App = () => {
       }
     });
     // to fix
-    setProfiles([...allProfiles, profile.data?.user || null]);
+    setProfiles([profile.data?.user || null, ...allProfiles]);
     };
 
   return (
