@@ -1,30 +1,60 @@
-import React from 'react';
-import { gql } from 'apollo-boost';
-import { graphql } from 'react-apollo';
+import React, { useState } from 'react';
+import userProfile from './query';
+import { graphql, useQuery } from 'react-apollo';
 
-const App = ({data: { loading, user }}) => loading ? [] : (
-  <div className="App">
-    <div>
-      {user.name}
-    </div>
-    <div>
-      {user.bio}
-    </div>
-    <div>
-      {user.company}
-    </div>
-  </div>
-  );
+const App = () => {
+  const [username, setUsername] = useState('');
 
-const user = gql`
-query {
-  user(login: "muchai-mercy") {
-    bio
-    avatarUrl
-    name
-    company
-  }
+  const setValue = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const [allProfiles, setProfiles] = useState([]);
+
+  const { refetch: getQueryResults } = useQuery(userProfile, {
+    variables: {
+      username: username
+    }
+  });
+
+  const handleSubmit = async () => {
+    const profile = await getQueryResults({
+      variables: {
+        username: username
+      }
+    });
+    // to fix
+    setProfiles([...allProfiles, profile.data?.user || null]);
+    };
+
+  return (
+    <div className="app">
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e)
+        setUsername('')
+      }}
+      >
+        <input
+            type='text'
+            onChange={setValue}
+            value={username}
+            placeholder='Type github username'
+        />
+        <button onClick={handleSubmit}>Enter</button>
+      </form>
+      <div className="container">
+      {allProfiles && allProfiles.map((user, index) => (
+        <div key={index} className="card">
+          <img src={user.avatarUrl} alt='' />
+          <p>{user.name}</p>
+          {user.company ? <p>Company: {user.company}</p> : null}
+          <p>{user.bio}</p>
+        </div>
+      ))}
+      </div>
+    </div>
+  )
 }
-`;
 
-export default graphql(user)(App);
+export default graphql(userProfile)(App);
