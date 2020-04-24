@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ApolloProvider } from '@apollo/client';
-import client from './query';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from '@apollo/react-hooks';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+const client = new ApolloClient({
+  uri: 'https://api.github.com/graphql',
+  request: (operation) => {
+    operation.setContext({
+      headers: {
+        Authorization: "bearer c650d6b323348c82a9b5d647858ce21f461de3a5"
+      }
+    })
+  }
+});
 
 ReactDOM.render(
   <ApolloProvider client={client}>

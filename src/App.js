@@ -1,15 +1,30 @@
 import React from 'react';
-import { useQuery } from '@apollo/client';
-import client from './query';
-import './App.css';
+import { gql } from 'apollo-boost';
+import { graphql } from 'react-apollo';
 
-const App = () => {
-  const data = useQuery(client);
-  return (
-    <div className="App">
-      {data}
+const App = ({data: { loading, user }}) => loading ? [] : (
+  <div className="App">
+    <div>
+      {user.name}
     </div>
+    <div>
+      {user.bio}
+    </div>
+    <div>
+      {user.company}
+    </div>
+  </div>
   );
-}
 
-export default App;
+const user = gql`
+query {
+  user(login: "muchai-mercy") {
+    bio
+    avatarUrl
+    name
+    company
+  }
+}
+`;
+
+export default graphql(user)(App);
